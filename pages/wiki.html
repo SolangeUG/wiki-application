@@ -1,0 +1,36 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<section>
+    <div class="row">
+        <div class="col-sm">
+            <h3 class="text-primary">Wiki Content</h3>
+        </div>
+        <div class="col-sm text-right">
+            <a class="navbar-brand text-info" href="/newentry">
+                <img src="./assets/plus.png" alt="New Article">
+                <span class="font-weight-bold">New</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+{% for article in articles: %}
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm"><strong>{{article.subject}}</strong></div>
+                <div class="col-sm text-right"><strong>{{article.created|datetime}}</strong></div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <div class="article-entry">{{article.content}}</div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endfor %}
+
+{% endblock %}
