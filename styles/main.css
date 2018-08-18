@@ -2,30 +2,30 @@
  * Sticky footer styles *
  ************************/
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
-  margin-top: 20px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    margin-top: 20px;
 }
 
 section {
-  margin-top: 10px;
-  margin-bottom: 30px;
+    margin-top: 10px;
+    margin-bottom: 30px;
 }
 
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 40px;
-  /* Vertically center the text there */
-  line-height: 40px;
-  background-color: #F5F5F5;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 40px;
+    /* Vertically center the text there */
+    line-height: 40px;
+    background-color: #F5F5F5;
 }
 
 
@@ -34,29 +34,33 @@ section {
  *******************/
 
 body > .container {
-  padding: 60px 15px 0;
+    padding: 60px 15px 0;
 }
 
 .footer > .container {
-  padding-right: 15px;
-  padding-left: 15px;
+    padding-right: 15px;
+    padding-left: 15px;
 }
 
 code {
-  font-size: 80%;
+    font-size: 80%;
 }
 
 #license {
-  margin-top: 10px;
-  margin-left: 20px;
-  background-color: #EAECEE;
+    margin-top: 10px;
+    margin-left: 20px;
+    background-color: #EAECEE;
 }
 
 #license > div {
-  padding: 10px;
+    padding: 10px;
 }
 
 .article-entry {
-  white-space: pre-wrap;
-  padding-bottom: 20px;
+    white-space: pre-wrap;
+    padding-bottom: 20px;
+}
+
+.wiki-link {
+    text-decoration: underline;
 }
