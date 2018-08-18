@@ -1,0 +1,43 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<h3>Signup for an account</h3>
+
+<section>
+    <form method="post">
+        <div class="form-group">
+            <label for="usernameInput">Username</label>
+            <input class="form-control" type="text" id="usernameInput"
+                   value="{{username}}" name="username" autofocus>
+            <label class="text-danger">{{username_error}}</label>
+        </div>
+        <div class="form-group">
+            <label for="passwordInput">Choose a password</label>
+            <input class="form-control" type="password" id="passwordInput"
+                   value="{{password}}" name="password">
+            <label class="text-danger">{{password_error}}</label>
+        </div>
+        <div class="form-group">
+            <label for="pswdConfirmInput">Confirm password</label>
+            <input class="form-control" type="password" id="pswdConfirmInput"
+                   value="{{cfpassword}}" name="verify">
+            <label class="text-danger">{{cfpassword_error}}</label>
+        </div>
+        <div class="form-group">
+            <label for="emailInput">Email address</label>
+            <input class="form-control" type="email" id="emailInput" placeholder="name@example.com"
+                   value="{{email}}" name="email">
+            <label class="text-danger">{{email_error}}</label>
+        </div>
+        <div class="form-group">
+            <label for="commentInput">Comments</label>
+            <textarea class="form-control" id="commentInput" rows="4"
+                      name="text" value="{{comments}}">{{comments}}</textarea>
+        </div>
+        <button type="submit" class="btn btn-secondary">Submit</button>
+        <a href="/wiki" name="cancel" class="btn btn-danger">Cancel</a>
+    </form>
+</section>
+
+{% endblock %}
