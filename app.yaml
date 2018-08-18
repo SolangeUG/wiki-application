@@ -15,6 +15,13 @@ api_version: 1
 threadsafe: yes
 
 skip_files:
+  # default files to ignore
+  - ^(.*/)?#.*#$
+  - ^(.*/)?.*~$
+  - ^(.*/)?.*\.py[co]$
+  - ^(.*/)?.*/RCS/.*$
+  - ^(.*/)?\..*$
+  # custom files to ignore
   - ^\.git/.*
   - ^\.idea$
   - ^\.gitignore
