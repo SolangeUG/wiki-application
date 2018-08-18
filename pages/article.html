@@ -1,0 +1,44 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<h3>New Blog Entry</h3>
+
+<section>
+    {% if editionmode %}
+        <form method="post">
+            <div class="form-group">
+                <label for="subjectInput">Subject</label>
+                <input class="form-control" type="text" id="subjectInput"
+                       value="{{subject}}" name="subject" autofocus>
+            </div>
+            <div class="form-group">
+                <label for="contentInput">Content</label>
+                <textarea class="form-control" id="contentInput" rows="20"
+                          value="{{content}}" name="content">{{content}}</textarea>
+            </div>
+            <div class="form-group">
+                <label class="text-danger">{{error}}</label>
+            </div>
+            <button type="submit" class="btn btn-secondary">Submit</button>
+            <a href="/wiki" name="cancel" class="btn btn-danger">Cancel</a>
+        </form>
+    {% else %}
+        <div class="container">
+            <div class="row">
+                <div class="col-sm"><strong>{{article.subject}}</strong></div>
+                <div class="col-sm text-right">
+                    by <strong>{{article.author}}</strong> | <strong>{{article.created|datetime}}</strong>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <div class="article-entry">{{article.content}}</div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+{% endblock %}
