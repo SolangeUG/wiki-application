@@ -2,19 +2,37 @@
 
 {% block content %}
 
-<section>
-    <div class="row">
-        <div class="col-sm">
-            <h3 class="text-primary">Wiki Content</h3>
+<div class="d-flex flex-row justify-content-between bd-highlight">
+    <div class="d-inline-flex flex-row bd-highlight">
+        {% if article %}
+        <div class="p-2 bd-highlight border border-secondary">
+            <a class="wiki-link" href="/_edit">edit</a>
+            <span> | </span>
+            <a class="wiki-link" href="/history">history</a>
         </div>
-        <div class="col-sm text-right">
-            <a class="navbar-brand text-info" href="/newentry">
-                <img src="./assets/plus.png" alt="New Article">
-                <span class="font-weight-bold">New</span>
-            </a>
+        {% else %}
+        <div class="p-2 bd-highlight">
+            <a href="/#"><img src="./assets/plus.png" alt="New Article"></a>
         </div>
+        {% endif %}
     </div>
-</section>
+
+    {% if not logged %}
+        <div class="d-inline-flex flex-row bd-highlight">
+            <div class="p-2 bd-highlight border border-primary">
+                <a class="wiki-link" href="/login">login</a>
+                <span> | </span>
+                <a class="wiki-link" href="/signup">signup</a>
+            </div>
+        </div>
+    {% else %}
+        <div class="d-inline-flex flex-row bd-highlight">
+            <div class="p-2 bd-highlight border border-success">
+                <a class="wiki-link text-success" href="/logout">{{user.username}} [Logout]</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
 
 {% for article in articles: %}
     <section>
