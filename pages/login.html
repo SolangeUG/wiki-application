@@ -1,0 +1,26 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<h3>Login</h3>
+
+<section>
+    <form method="post">
+        <div class="form-group">
+            <label for="usernameInput">Username</label>
+            <input class="form-control" type="text" id="usernameInput"
+                   value="{{username}}" name="username" autofocus>
+            <label class="text-danger">{{username_error}}</label>
+        </div>
+        <div class="form-group">
+            <label for="passwordInput">Password</label>
+            <input class="form-control" type="password" id="passwordInput"
+                   value="{{password}}" name="password">
+            <label class="text-danger">{{password_error}}</label>
+        </div>
+        <button type="submit" class="btn btn-secondary">Submit</button>
+        <a href="/wiki" name="cancel" class="btn btn-danger">Cancel</a>
+    </form>
+</section>
+
+{% endblock %}
