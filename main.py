@@ -15,6 +15,7 @@
 # limitations under the License.
 #
 import webapp2
+import wiki.wiki as wiki
 import handler.handler as handler
 
 
@@ -30,4 +31,5 @@ class MainHandler(handler.TemplateHandler):
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
+    ('/wiki', wiki.WikiHandler)
 ], debug=True)
