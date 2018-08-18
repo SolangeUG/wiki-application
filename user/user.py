@@ -2,7 +2,7 @@ import handler.handler as handler
 from google.appengine.ext import db
 
 
-class UserHandler(handler.TemplateHandler):
+class SignupHandler(handler.TemplateHandler):
     """
     UserHandler inherits from the hander.TemplateHandler class.
     It aggregates functionalities for signing up for an account.
