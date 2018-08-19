@@ -1,5 +1,11 @@
+import logging
 import handler.handler as handler
+import util.security as security
+import util.validator as validator
 from google.appengine.ext import db
+
+# log user related activities
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 
 class SignupHandler(handler.TemplateHandler):
@@ -11,8 +17,60 @@ class SignupHandler(handler.TemplateHandler):
         self.render("signup.html")
 
     def post(self):
-        # TODO: fully implement this method
-        pass
+        username = self.request.get('username')
+        password = self.request.get('password')
+        cfpassword = self.request.get('verify')
+        user_email = self.request.get('email')
+        comments = self.request.get('text')
+
+        if validator.validate_user(username, password, cfpassword, user_email):
+
+            # check if the input username is unique
+            query = db.Query(User)
+            query.filter('username =', username)
+            existing_user = query.get()
+
+            if existing_user:
+                # ask the user to choose a different username
+                username_error = "Username already exists"
+                self.render("signup.html", username=username, username_error=username_error)
+            else:
+                # create and persist an account for the user
+                hashed_password = security.hash_password(password)
+                new_user = User(username=username, password=hashed_password, email=user_email, comments=comments)
+                key = new_user.put()
+
+                # log new user account key
+                logging.warn('USER | Created user key %s' % str(key))
+
+                self.response.headers['Content-Type'] = 'text/plain'
+                # set a cookie with the username
+                user_cookie = security.make_secure_val(username)
+                self.response.set_cookie('user', str(user_cookie), max_age=7200, path='/')
+                self.redirect('/wiki')
+
+        else:
+            username_error = ""
+            password_error = ""
+            cfpassword_error = ""
+            email_error = ""
+
+            if not validator.is_username_valid(username):
+                username_error = "Invalid username!"
+            if not validator.is_password_valid(password):
+                password_error = "Invalid password!"
+            if not validator.is_cfpassword_valid(password, cfpassword):
+                cfpassword_error = "Your passwords don't match!"
+            if not validator.is_email_valid(user_email):
+                email_error = "Invalid email!"
+            self.render("signup.html",
+                        username=username,
+                        username_error=username_error,
+                        password_error=password_error,
+                        cfpassword_error=cfpassword_error,
+                        email=user_email,
+                        email_error=email_error,
+                        comments=comments)
 
 
 class LoginHandler(handler.TemplateHandler):
@@ -24,8 +82,36 @@ class LoginHandler(handler.TemplateHandler):
         self.render("login.html")
 
     def post(self):
-        # TODO: fully implement this method
-        pass
+        username = self.request.get('username')
+        password = self.request.get('password')
+
+        if username and password:
+            # retrieve user from the datastore
+            query = db.Query(User)
+            query.filter('username =', username)
+            user = query.get()
+
+            if user:
+                # verify input password
+                if security.check_password(password, user.password):
+                    self.response.headers['Content-Type'] = 'text/plain'
+
+                    # set a cookie with the username
+                    user_cookie = security.make_secure_val(user.username)
+                    self.response.set_cookie('user', str(user_cookie), max_age=7200, path='/')
+                    self.redirect("/wiki")
+                else:
+                    # the input password is not valid
+                    message = "Invalid password!"
+                    self.render("login.html", password_error=message)
+            else:
+                # the input username is unknown
+                message = "Invalid username!"
+                self.render("login.html", username_error=message)
+        else:
+            # no username or password were input
+            self.render("login.html", username_error="Please input valid usename!",
+                        password_error="Please input valid password!")
 
 
 class LogoutHandler(handler.TemplateHandler):
@@ -34,7 +120,9 @@ class LogoutHandler(handler.TemplateHandler):
     It aggregates functionalities for logging out of an account.
     """
     def get(self):
-        # TODO: fully implement this method
+        # clear out any user cookie that might have been set
+        self.response.headers.add_header('Set-Cookie', 'user=%s; Path=/' % str())
+        # all we ever do from here is go back to the general wiki page
         self.redirect('/wiki')
 
 
