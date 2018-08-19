@@ -79,6 +79,9 @@ class LoginHandler(handler.TemplateHandler):
     It aggregates functionalities for logging into an account.
     """
     def get(self):
+        referer = self.request.headers.get('Referer')
+        logging.warn("REFERER | Login page referer %s" % referer)
+
         self.render("login.html")
 
     def post(self):
@@ -100,6 +103,11 @@ class LoginHandler(handler.TemplateHandler):
                     user_cookie = security.make_secure_val(user.username)
                     self.response.set_cookie('user', str(user_cookie), max_age=7200, path='/')
                     self.redirect("/wiki")
+
+                    # TODO: instead of redirecting all traffic to /wiki,
+                    # TODO: find a way to retrieve the URL that redirected the user to this login page
+                    # TODO: and redirect the user to that URL.
+                    # TODO: See if you can use the 'Referer' entry of the request headers.
                 else:
                     # the input password is not valid
                     message = "Invalid password!"
