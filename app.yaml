@@ -39,6 +39,16 @@ handlers:
 - url: /assets
   static_dir: assets
 
+- url: .*/favicon\.ico
+  static_files: favicon.ico
+  upload: favicon\.ico
+
+- url: .*/styles
+  static_dir: styles
+
+- url: .*/assets
+  static_dir: assets
+
 - url: .*
   script: main.app
 
