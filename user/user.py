@@ -78,7 +78,20 @@ class LoginHandler(handler.TemplateHandler):
     LoginHandler inherits from the hander.TemplateHandler class.
     It aggregates functionalities for logging into an account.
     """
+    requested_relative_path = None
+
     def get(self):
+        # memorize the original path the user followed to get here
+        host = self.request.headers.get('Host')
+        requested_url = self.request.get('from')
+        logging.warn("LOGIN PAGE | Requested relative path: %s" % requested_url)
+
+        if requested_url and host:
+            # the request URL is of the form: protocol://host/path
+            # so, the orginally requested relative path becomes:
+            global requested_relative_path
+            requested_relative_path = requested_url.split(host)[1]
+            logging.warn("LOGIN PAGE | Requested relative path: %s" % requested_relative_path)
         self.render("login.html")
 
     def post(self):
@@ -100,16 +113,12 @@ class LoginHandler(handler.TemplateHandler):
                     user_cookie = security.make_secure_val(user.username)
                     self.response.set_cookie('user', str(user_cookie), max_age=7200, path='/')
 
-                    # redirect the user to where they came from
-                    host = self.request.headers.get('Host')
-                    referer = self.request.headers.get('Referer')
-                    if referer and host:
-                        # the referer URL is of the form: protocol://host/original_path
-                        # so, the orginal relative path becomes:
-                        original_path = referer.split(host)[1]
-                        logging.warn("LOGIN PAGE | Path to requested resource: %s" % original_path)
+                    global requested_relative_path
+                    if requested_relative_path:
+                        # redirect the user to where they came from
+                        logging.warn("LOGIN PAGE | Path to requested resource: %s" % requested_relative_path)
 
-                        self.redirect(original_path)
+                        self.redirect(requested_relative_path)
                     else:
                         # default redirect
                         self.redirect("/wiki")
