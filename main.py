@@ -17,6 +17,7 @@
 import webapp2
 import wiki.wiki as wiki
 import user.user as user
+import wiki.article as article
 import handler.handler as handler
 
 
@@ -33,6 +34,8 @@ class MainHandler(handler.TemplateHandler):
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/wiki', wiki.WikiHandler),
+    ('/wiki/([^[^\P{P}-]]+)', article.ArticleHandler),
+    ('/_edit/([^[^\P{P}-]]+)', article.ArticleEditorHandler),
     ('/signup', user.SignupHandler),
     ('/login', user.LoginHandler),
     ('/logout', user.LogoutHandler)
