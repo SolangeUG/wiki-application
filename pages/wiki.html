@@ -4,17 +4,9 @@
 
 <div class="d-flex flex-row justify-content-between bd-highlight">
     <div class="d-inline-flex flex-row bd-highlight">
-        {% if article %}
-        <div class="p-2 bd-highlight border border-secondary">
-            <a class="wiki-link" href="/_edit">edit</a>
-            <span> | </span>
-            <a class="wiki-link" href="/history">history</a>
-        </div>
-        {% else %}
         <div class="p-2 bd-highlight">
-            <a href="/#"><img src="./assets/plus.png" alt="New Article"></a>
+            <a href="/_edit"><img src="./assets/plus.png" alt="New Article"></a>
         </div>
-        {% endif %}
     </div>
 
     {% if not logged %}
