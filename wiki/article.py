@@ -14,10 +14,11 @@ class ArticleHandler(handler.TemplateHandler):
     ArticleHandler inherits from the handler.TemplateHandler class.
     It aggregates functionalities for retrieving or creating a requested resource by the user.
     """
-
-    def render_article(self, logged=False, username=None, editionmode=False, article=None, error=""):
+    def render_article(self, logged=False, username=None, editionmode=False,
+                       title="", content="", author="", error=""):
         self.render("article.html", logged=logged, username=username,
-                    editionmode=editionmode, article=article, error=error)
+                    editionmode=editionmode, title=title, content=content, author=author,
+                    error=error)
 
     def get(self, title):
         # do we have a logged in user?
@@ -33,10 +34,41 @@ class ArticleHandler(handler.TemplateHandler):
         if title:
             article = get_article(title)
             if article:
-
-                self.render("article.html", logged=logged, username=username, article=article)
+                self.render_article(logged=logged, username=username, title=article.title,
+                                    content=article.content, author=article.author)
             else:
-                self.redirect('_edit/%s' % title)
+                self.redirect('/_edit/%s' % title)
+
+
+class NewArticleHandler(handler.TemplateHandler):
+    """
+    NewArticleHandler inherits from the hander.TemplateHandler class.
+    It aggregates functionalities for creating and persisting new wiki articles to the datastore.
+    """
+    def render_article(self, logged=False, username=None, editionmode=False,
+                       title="", content= "", author="", error=""):
+        self.render("article.html", logged=logged, username=username,
+                    editionmode=editionmode, title=title, content=content, author=author,
+                    error=error)
+
+    def get(self):
+        # do we have a logged in user?
+        user_cookie = self.request.cookies.get('user')
+        if user_cookie:
+            username = security.check_secure_val(user_cookie)
+            if username:
+                # a known user is logged in
+                self.render_article(logged=True, username=username)
+            else:
+                # only logged in users are allowed to create/edit articles
+                self.redirect('/login')
+        else:
+            # only logged in users are allowed to create/edit articles
+            self.redirect('/login')
+
+    def post(self):
+        # TODO: implement method
+        pass
 
 
 class ArticleEditorHandler(handler.TemplateHandler):
@@ -44,9 +76,11 @@ class ArticleEditorHandler(handler.TemplateHandler):
     ArticleEditorHandler inherits from the hander.TemplateHandler class.
     It aggregates functionalities for creating, editing or persisting wiki articles to the datastore.
     """
-    def render_article(self, logged=False, username=None, editionmode=False, article=None, error=""):
+    def render_article(self, logged=False, username=None, editionmode=False,
+                       title="", content= "", author="", error=""):
         self.render("article.html", logged=logged, username=username,
-                    editionmode=editionmode, article=article, error=error)
+                    editionmode=editionmode, title=title, content=content, author=author,
+                    error=error)
 
     def get(self, article_title):
         username = None
@@ -62,14 +96,17 @@ class ArticleEditorHandler(handler.TemplateHandler):
                 title = article_title
                 if title:
                     article = get_article(title)
-                    if not article:
+                    if article:
+                        # edition of an already existing article with the input title
+                        self.render_article(logged=True, username=username, editionmode=True,
+                                            title=title, content=article.content, author=article.author)
+                    else:
                         # creation of a new article with the presubmitted title
-                        article = Article(title, "", "")
+                        self.render_article(logged=True, username=username, editionmode=True,
+                                            title=title)
                 else:
                     # creation of a new article without a presubmitted title
-                    article = Article("", "", "")
-
-                self.render_article(logged=True, username=username, editionmode=True, article=article)
+                    self.render_article(logged=True, username=username, editionmode=True)
 
         if not username:
             # only logged in users are allowed to create/edit articles
