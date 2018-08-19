@@ -58,7 +58,7 @@ class NewArticleHandler(handler.TemplateHandler):
             username = security.check_secure_val(user_cookie)
             if username:
                 # a known user is logged in
-                self.render_article(logged=True, username=username)
+                self.render_article(logged=True, username=username, editionmode=True)
             else:
                 # only logged in users are allowed to create/edit articles
                 self.redirect('/login')
