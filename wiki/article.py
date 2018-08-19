@@ -61,10 +61,10 @@ class NewArticleHandler(handler.TemplateHandler):
                 self.render_article(logged=True, username=username, editionmode=True)
             else:
                 # only logged in users are allowed to create/edit articles
-                self.redirect('/login')
+                self.redirect('/login?from=%s' % self.request.url)
         else:
             # only logged in users are allowed to create/edit articles
-            self.redirect('/login')
+            self.redirect('/login?from=%s' % self.request.url)
 
     def post(self):
         # TODO: implement method
@@ -110,7 +110,7 @@ class ArticleEditorHandler(handler.TemplateHandler):
 
         if not username:
             # only logged in users are allowed to create/edit articles
-            self.redirect('/login')
+            self.redirect('/login?from=%s' % self.request.url)
 
     def post(self):
         # TODO: implement method
