@@ -36,12 +36,12 @@
             <div class="form-group">
                 <label for="titleInput">Title</label>
                 <input class="form-control" type="text" id="titleInput"
-                       value="{{article.title}}" name="title" autofocus>
+                       value="{{title}}" name="title" autofocus>
             </div>
             <div class="form-group">
                 <label for="contentInput">Content</label>
                 <textarea class="form-control" id="contentInput" rows="20"
-                          value="{{article.content}}" name="content">{{article.content}}</textarea>
+                          value="{{content}}" name="content">{{content}}</textarea>
             </div>
             <div class="form-group">
                 <label class="text-danger">{{error}}</label>
@@ -52,15 +52,15 @@
     {% else %}
         <div class="container">
             <div class="row">
-                <div class="col-sm"><strong>{{article.title}}</strong></div>
+                <div class="col-sm"><strong>{{title}}</strong></div>
                 <div class="col-sm text-right">
-                    by <strong>{{article.author}}</strong> | <strong>{{article.created|datetime}}</strong>
+                    by <strong>{{author}}</strong> | <strong>{{created|datetime}}</strong>
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div class="col">
-                    <div class="article-entry">{{article.content}}</div>
+                    <div class="article-entry">{{content}}</div>
                 </div>
             </div>
         </div>
