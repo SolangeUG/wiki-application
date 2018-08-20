@@ -6,7 +6,7 @@
     <div class="d-inline-flex flex-row bd-highlight">
         {% if not editionmode %}
             <div class="p-2 bd-highlight border border-secondary">
-                <a class="wiki-link" href="/_edit">edit</a>
+                <a class="wiki-link" href="/_edit/{{article.title}}">edit</a>
                 <span> | </span>
                 <a class="wiki-link" href="/history">history</a>
             </div>
@@ -35,13 +35,18 @@
         <form method="post">
             <div class="form-group">
                 <label for="titleInput">Title</label>
-                <input class="form-control" type="text" id="titleInput"
-                       value="{{title}}" name="title" autofocus>
+                {% if newarticle %}
+                    <input class="form-control" type="text" id="titleInput"
+                           value="{{article.title}}" name="title" autofocus>
+                {% else %}
+                    <input class="form-control" type="text" id="titleInputDisabled"
+                           value="{{article.title}}" name="title" disabled>
+                {% endif %}
             </div>
             <div class="form-group">
                 <label for="contentInput">Content</label>
                 <textarea class="form-control" id="contentInput" rows="20"
-                          value="{{content}}" name="content">{{content}}</textarea>
+                          value="{{article.content}}" name="content">{{article.content}}</textarea>
             </div>
             <div class="form-group">
                 <label class="text-danger">{{error}}</label>
@@ -52,15 +57,15 @@
     {% else %}
         <div class="container">
             <div class="row">
-                <div class="col-sm"><strong>{{title}}</strong></div>
+                <div class="col-sm"><strong>{{article.title}}</strong></div>
                 <div class="col-sm text-right">
-                    by <strong>{{author}}</strong> | <strong>{{created|datetime}}</strong>
+                    by <strong>{{article.author}}</strong> | <strong>{{article.updated|datetime}}</strong>
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div class="col">
-                    <div class="article-entry">{{content}}</div>
+                    <div class="article-entry">{{article.content}}</div>
                 </div>
             </div>
         </div>
