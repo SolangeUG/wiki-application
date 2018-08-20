@@ -84,7 +84,6 @@ class LoginHandler(handler.TemplateHandler):
         # memorize the original path the user followed to get here
         host = self.request.headers.get('Host')
         requested_url = self.request.get('from')
-        logging.warn("LOGIN PAGE | Requested relative path: %s" % requested_url)
 
         if requested_url and host:
             # the request URL is of the form: protocol://host/path
