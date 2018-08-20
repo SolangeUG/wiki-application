@@ -1,6 +1,7 @@
 import os
 import jinja2
 import webapp2
+from datetime import timedelta
 
 # os.path.dirname(__file__) returns the string name of the current directory ==> 'sug-blog'
 # os.path.join(os.path.dirname(__file__), "../pages") appends 'pages' to the current directory ==> 'sug-blogs/pages'
@@ -21,6 +22,7 @@ def format_datetime(value, datetime_format='medium'):
         if datetime_format != 'medium':
             return str(value)
         else:
+            value = value + timedelta(hours=2)
             return value.strftime('%b %d, %Y - %H:%M')
 
 
