@@ -20,22 +20,26 @@ class ArticleHandler(handler.TemplateHandler):
                     editionmode=editionmode, article=article, error=error)
 
     def get(self, title):
-        # do we have a logged in user?
-        logged = False
-        username = None
-
         user_cookie = self.request.cookies.get('user')
         if user_cookie:
+            # do we have a logged in user?
             username = security.check_secure_val(user_cookie)
             logged = username is not None
 
-        # do we have a non-empty title?
-        if title:
-            article = get_article(title)
-            if article:
-                self.render_article(logged=logged, username=username, article=article)
+            if logged:
+                # do we have a non-empty title?
+                if title:
+                    article = get_article(title)
+                    if article:
+                        self.render_article(logged=logged, username=username, article=article)
+                    else:
+                        self.redirect('/_edit/%s' % title)
             else:
-                self.redirect('/_edit/%s' % title.replace(" ", "-"))
+                # only logged in users are allowed to create/edit articles
+                self.redirect('/login?from=%s' % self.request.url)
+        else:
+            # only logged in users are allowed to create/edit articles
+            self.redirect('/login?from=%s' % self.request.url)
 
 
 class NewArticleHandler(handler.TemplateHandler):
@@ -84,7 +88,8 @@ class NewArticleHandler(handler.TemplateHandler):
                     # rerun the DB query and update the cache
                     get_top_articles(True)
 
-                    self.redirect('/wiki/%s' % title.replace(" ", "-"))
+                    # self.redirect('/wiki/%s' % title)
+                    self.redirect('/%s' % title)
                 else:
                     # all mandatory fields haven't been filled
                     global new_article
@@ -126,7 +131,7 @@ class ArticleEditorHandler(handler.TemplateHandler):
             if username:
                 # a known user is logged in
                 # has he requested a particular article?
-                title = article_title.replace("-", " ")
+                title = article_title
                 if title:
                     global known_article
                     known_article = get_article(title)
@@ -171,7 +176,8 @@ class ArticleEditorHandler(handler.TemplateHandler):
                     # rerun the DB query and update the cache
                     get_top_articles(True)
 
-                    self.redirect('/wiki/%s' % title)
+                    # self.redirect('/wiki/%s' % title)
+                    self.redirect('/%s' % title)
                 else:
                     if title:
                         known_article.title = title
