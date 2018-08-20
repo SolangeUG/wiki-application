@@ -20,26 +20,35 @@ class ArticleHandler(handler.TemplateHandler):
                     editionmode=editionmode, article=article, error=error)
 
     def get(self, title):
+        article = None
+        logged = False
+        username = None
+
+        # do we have a non-empty title?
+        if title:
+            article = get_article(title)
+
+        # do we have a logged in user?
         user_cookie = self.request.cookies.get('user')
         if user_cookie:
             # do we have a logged in user?
             username = security.check_secure_val(user_cookie)
             logged = username is not None
 
-            if logged:
-                # do we have a non-empty title?
-                if title:
-                    article = get_article(title)
-                    if article:
-                        self.render_article(logged=logged, username=username, article=article)
-                    else:
-                        self.redirect('/_edit/%s' % title)
+        if logged:
+            if article:
+                # display article content
+                self.render_article(logged=logged, username=username, article=article)
+            else:
+                # redirect to new article creation page
+                self.redirect('/_edit/%s' % title)
+        else:
+            if article:
+                # display article content still, even if the current user is not logged in
+                self.render_article(article=article)
             else:
                 # only logged in users are allowed to create/edit articles
                 self.redirect('/login?from=%s' % self.request.url)
-        else:
-            # only logged in users are allowed to create/edit articles
-            self.redirect('/login?from=%s' % self.request.url)
 
 
 class NewArticleHandler(handler.TemplateHandler):
