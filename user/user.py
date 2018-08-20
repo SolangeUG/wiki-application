@@ -85,6 +85,9 @@ class LoginHandler(handler.TemplateHandler):
         host = self.request.headers.get('Host')
         requested_url = self.request.get('from')
 
+        global requested_relative_path
+        requested_relative_path = ""
+
         if requested_url and host:
             # the request URL is of the form: protocol://host/path
             # so, the orginally requested relative path becomes:
