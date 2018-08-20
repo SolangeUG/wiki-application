@@ -37,9 +37,8 @@ app = webapp2.WSGIApplication([
     ('/_edit', article.NewArticleHandler),
     ('/wiki/(.+)', article.ArticleHandler),
     ('/_edit/(.+)', article.ArticleEditorHandler),
-    ('/wiki/([a-zA-Z0-9_]+)', article.ArticleHandler),
-    ('/_edit/([a-zA-Z0-9_]+)', article.ArticleEditorHandler),
     ('/signup', user.SignupHandler),
     ('/login', user.LoginHandler),
-    ('/logout', user.LogoutHandler)
+    ('/logout', user.LogoutHandler),
+    ('/(.+)', article.ArticleHandler),
 ], debug=True)
